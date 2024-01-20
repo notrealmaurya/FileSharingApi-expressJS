@@ -4,6 +4,9 @@ const filesRouter = require("express").Router();
 const File = require("../models/fileModel");
 const path = require('path');
 const { format } = require("date-fns");
+const sendEmail = require('../services/emailService'); // Update the path
+
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -50,27 +53,49 @@ filesRouter.post('/', async (req, res) => {
 });
 
 
-filesRouter.post('/send',async (req,res)=>{
-    const {uuid,emailTo,emailFrom}= req.body
+filesRouter.post('/send', async (req, res) => {
+    const { uuid, emailTo, emailFrom } = req.body;
 
-    if(!uuid || !emailTo || !emailFrom){
-        return res.status(422).send({error: "All fields are required"});
-
+    if (!uuid || !emailTo || !emailFrom) {
+        return res.status(422).send({ error: "All fields are required" });
     }
 
-    const file = await File.findOne({uuid: uuid});
+    const file = await File.findOne({ uuid: uuid });
 
-    if(file.sender){
-        return res.status(403).send({error:"This email has already been sent
+    if (file.sender) {
+        return res.status(403).send({
+            error: "This email has already been sent"
+        });
     }
-    
 
     file.sender = emailFrom;
-    file.receiver=emailTo
-    
+    file.receiver = emailTo;
 
+    const response = await file.save();
 
+    // Send Email
+    const emailContent = {
+        from: emailFrom,
+        to: emailTo,
+        subject: 'File Sharing Notification',
+        text: 'You have received a file.',
+        html: require('../services/emailTemplate')({
+            emailFrom: emailFrom,
+            downloadLink: `${process.env.APP_BASE_URL}/files/${file.uuid}`,
+            size: parseInt(file.size / 1000) + ' KB',
+            expires: '24 hrs'
+        })
+    };
+
+    try {
+        await sendEmail(emailContent);
+        return res.json({ message: 'Email sent successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Failed to send email' });
+    }
 });
+
 
 
 module.exports = filesRouter;
