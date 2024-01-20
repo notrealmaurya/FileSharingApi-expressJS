@@ -10,12 +10,12 @@ const path = require('path')
 
 const PORT = process.env.PORT || 5000
 
+app.use(express.json());
 app.set("views", path.join(__dirname, 'view'));
 
 
 app.set('view engine', 'ejs')
 
-app.use(express.json());
 
 app.use("/api/files", require("./routes/filesRoute"));
 
