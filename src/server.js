@@ -17,9 +17,9 @@ app.set("views", path.join(__dirname, 'view'));
 app.set('view engine', 'ejs')
 
 
-app.use("/api/files", require("./routes/filesRoute"));
-
 app.use("/files", require("./routes/showRoute"));
+
+app.use("/files/upload", require("./routes/filesRoute"));
 
 app.use("/files/download", require("./routes/downloadRoute"));
 
