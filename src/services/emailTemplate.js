@@ -131,7 +131,7 @@ module.exports = ({ emailFrom, downloadLink, size, expires }) => {
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <p style="font-family: 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thank you for using inShare service.</p>
+                                            <p style="font-family: 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thank you for using CloudDrop service.</p>
                                             <p style="font-family: 'Helvetica Neue', sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Good luck! Hope it works.</p>
                                         </td>
                                     </tr>
